@@ -1,0 +1,189 @@
+/* ============================================
+   LOVE PAGE - Soft Pink Night + Neon Blue/Pink Text
+   Mobile-First Optimized
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  position: fixed;
+  inset: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
+
+body {
+  /* Nền hồng đen êm dịu, lãng mạn */
+  background: radial-gradient(circle at 50% 45%, #2a0b1c 0%, #1a0612 50%, #0d0208 100%);
+  font-family: 'Dancing Script', cursive;
+}
+
+/* === Stars Canvas === */
+#stars-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* === Fireworks Canvas === */
+#fireworks-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* === Hearts & Messages Container === */
+#hearts-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* === Falling Heart === */
+.falling-heart {
+  position: absolute;
+  top: -60px;
+  animation: fallDown linear forwards;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgba(255, 77, 109, 0.6))
+          drop-shadow(0 0 16px rgba(255, 105, 180, 0.4));
+  will-change: transform, opacity;
+}
+
+.falling-heart svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* === Falling Message - Lớn hơn, đổi màu xanh dương <-> hồng chậm rãi === */
+.falling-message {
+  position: absolute;
+  top: -70px;
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.15rem, 4.5vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  animation: fallDownMessage linear forwards, slowBluePinkShift 8s ease-in-out infinite alternate;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* === Center Message - Tối ưu cho điện thoại, chữ lớn & đổi màu chậm rãi === */
+.center-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.45rem, 6.2vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  width: 90vw;
+  max-width: 580px;
+  padding: 0.8rem 1.2rem;
+  pointer-events: none;
+  animation: slowBluePinkShift 9s ease-in-out infinite alternate;
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.center-message.fade-out {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.94);
+}
+
+.center-message.fade-in {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* ============================================
+   CHUYỂN MÀU CHẬM RÃI GIỮA XANH DƯƠNG VÀ HỒNG
+   ============================================ */
+@keyframes slowBluePinkShift {
+  0% {
+    color: #ffb3c6;
+    text-shadow:
+      0 0 6px rgba(255, 77, 109, 0.8),
+      0 0 16px rgba(255, 105, 180, 0.5),
+      0 0 32px rgba(255, 45, 117, 0.35);
+  }
+  30% {
+    color: #f7c5e6;
+    text-shadow:
+      0 0 6px rgba(236, 72, 153, 0.8),
+      0 0 16px rgba(217, 70, 239, 0.45),
+      0 0 32px rgba(168, 85, 247, 0.3);
+  }
+  70% {
+    color: #bfe5ff;
+    text-shadow:
+      0 0 6px rgba(56, 189, 248, 0.8),
+      0 0 16px rgba(14, 165, 233, 0.5),
+      0 0 32px rgba(2, 132, 199, 0.35);
+  }
+  100% {
+    color: #99d8ff;
+    text-shadow:
+      0 0 7px rgba(14, 165, 233, 0.9),
+      0 0 18px rgba(2, 132, 199, 0.55),
+      0 0 35px rgba(3, 105, 161, 0.4);
+  }
+}
+
+/* === Animations === */
+@keyframes fallDown {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(calc(100dvh + 70px)) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes fallDownMessage {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.95;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(calc(100dvh + 90px));
+    opacity: 0;
+  }
+}
