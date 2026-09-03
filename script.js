@@ -117,7 +117,7 @@ const heartsContainer = document.getElementById('hearts-container');
 
 function spawnHeart() {
   // Tránh dồn quá nhiều phần tử DOM cùng lúc
-  if (heartsContainer.childElementCount > 40) return;
+  if (heartsContainer.childElementCount > 65) return;
 
   const heart = document.createElement('div');
   heart.classList.add('falling-heart');
@@ -321,8 +321,8 @@ function init() {
   setupSingleHeartInteraction();
   animateFireworks();
 
-  // Nhịp độ rơi trái tim êm đềm: 650ms/trái tim (rất mượt mà)
-  setInterval(spawnHeart, 650);
+  // Nhịp độ rơi trái tim: tăng tần suất 10% (585ms/trái tim)
+  setInterval(spawnHeart, 585);
 
   // Nhịp độ thông điệp rơi: tăng tần suất 29% (~2.15 giây/thông điệp)
   setInterval(spawnFallingMessage, 2150);

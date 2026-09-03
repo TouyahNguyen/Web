@@ -121,6 +121,8 @@ body {
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
   z-index: 10;
+  perspective: 1200px;
+  transform-style: preserve-3d;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -129,7 +131,7 @@ body {
   user-select: none;
 }
 
-/* Vòng hào quang phát sáng neon hồng */
+/* Vòng hào quang phát sáng neon hồng đặt sâu phía sau */
 .neon-aura {
   position: absolute;
   width: clamp(180px, 46vw, 290px);
@@ -138,20 +140,19 @@ body {
   background: radial-gradient(circle, rgba(255, 20, 147, 0.38) 0%, rgba(255, 0, 128, 0.12) 52%, transparent 72%);
   animation: auraPulse 3.5s ease-in-out infinite alternate;
   pointer-events: none;
+  transform: translateZ(-80px);
 }
 
 /* 1 Vòng viền trái tim 3D xoay 360 độ liên tục tại chỗ */
 .single-heart-frame {
   width: clamp(130px, 32vw, 200px);
   height: clamp(130px, 32vw, 200px);
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   transform-style: preserve-3d;
   animation: spinSingleHeart360 6.5s linear infinite;
-  filter: drop-shadow(0 0 10px rgba(255, 51, 153, 0.95))
-          drop-shadow(0 0 25px rgba(255, 20, 147, 0.8))
-          drop-shadow(0 0 50px rgba(255, 0, 128, 0.5));
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
 }
@@ -161,43 +162,66 @@ body {
   height: 100%;
   display: block;
   overflow: visible;
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+  transform-style: preserve-3d;
+}
+
+.heart-outline-svg.layer-front {
+  transform: translateZ(5px);
+  filter: drop-shadow(0 0 8px rgba(255, 51, 153, 0.95))
+          drop-shadow(0 0 20px rgba(255, 20, 147, 0.8))
+          drop-shadow(0 0 40px rgba(255, 0, 128, 0.6));
+}
+
+.heart-outline-svg.layer-back {
+  position: absolute;
+  inset: 0;
+  transform: translateZ(-5px);
+  opacity: 0.85;
+  filter: drop-shadow(0 0 6px rgba(255, 20, 147, 0.8))
+          drop-shadow(0 0 16px rgba(255, 0, 128, 0.5));
+}
+
+.outline-path {
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
 }
 
 .center-heart-wrapper:hover .single-heart-frame {
-  filter: drop-shadow(0 0 14px rgba(255, 102, 178, 1))
-          drop-shadow(0 0 35px rgba(255, 20, 147, 0.95))
-          drop-shadow(0 0 70px rgba(255, 0, 128, 0.75));
+  filter: drop-shadow(0 0 12px rgba(255, 102, 178, 1))
+          drop-shadow(0 0 30px rgba(255, 20, 147, 0.95));
 }
 
 .single-heart-frame.thump {
   animation: singleHeartThump 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), spinSingleHeart360Fast 1.2s ease-in-out !important;
 }
 
-/* Chuyển động xoay 360 độ quanh trục với góc nghiêng 3D tự nhiên */
+/* Chuyển động xoay 360 độ quanh trục với góc nghiêng 3D tự nhiên - KHÔNG bị cắt nửa hình */
 @keyframes spinSingleHeart360 {
   0% {
-    transform: perspective(850px) rotateX(14deg) rotateY(0deg) scale(1);
+    transform: rotateX(14deg) rotateY(0deg) scale(1);
   }
   25% {
-    transform: perspective(850px) rotateX(14deg) rotateY(90deg) scale(1.05);
+    transform: rotateX(14deg) rotateY(90deg) scale(1.04);
   }
   50% {
-    transform: perspective(850px) rotateX(14deg) rotateY(180deg) scale(1.09);
+    transform: rotateX(14deg) rotateY(180deg) scale(1.08);
   }
   75% {
-    transform: perspective(850px) rotateX(14deg) rotateY(270deg) scale(1.05);
+    transform: rotateX(14deg) rotateY(270deg) scale(1.04);
   }
   100% {
-    transform: perspective(850px) rotateX(14deg) rotateY(360deg) scale(1);
+    transform: rotateX(14deg) rotateY(360deg) scale(1);
   }
 }
 
 @keyframes spinSingleHeart360Fast {
   0% {
-    transform: perspective(850px) rotateX(14deg) rotateY(0deg) scale(1.25);
+    transform: rotateX(14deg) rotateY(0deg) scale(1.25);
   }
   100% {
-    transform: perspective(850px) rotateX(14deg) rotateY(720deg) scale(1);
+    transform: rotateX(14deg) rotateY(720deg) scale(1);
   }
 }
 
