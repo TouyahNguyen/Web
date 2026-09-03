@@ -12,7 +12,7 @@
   --neon-pink-main: #ffa1d2;
   --neon-pink-glow: #ff7ab8;
   --neon-pink-accent: #ff529a;
-  
+
   --bg-gradient: radial-gradient(ellipse at 50% 40%, #351025 0%, #200817 50%, #0d010a 100%);
 }
 
@@ -22,7 +22,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   height: 100dvh;
@@ -113,7 +114,7 @@ body {
   transform: translate3d(0, 0, 0);
 }
 
-/* === Center 3D Wireframe Heart (Khung Trái Tim 3D Phát Sáng) === */
+/* === Center 360° Rotating Single Neon Heart Wireframe (1 Vòng Khung Trái Tim Duy Nhất) === */
 .center-heart-wrapper {
   position: fixed;
   top: 50%;
@@ -131,34 +132,85 @@ body {
 /* Vòng hào quang phát sáng neon hồng */
 .neon-aura {
   position: absolute;
-  width: clamp(200px, 50vw, 320px);
-  height: clamp(200px, 50vw, 320px);
+  width: clamp(180px, 46vw, 290px);
+  height: clamp(180px, 46vw, 290px);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 20, 147, 0.35) 0%, rgba(255, 0, 128, 0.12) 50%, transparent 72%);
+  background: radial-gradient(circle, rgba(255, 20, 147, 0.38) 0%, rgba(255, 0, 128, 0.12) 52%, transparent 72%);
   animation: auraPulse 3.5s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
-/* Canvas dựng khung dây trái tim 3D (Hollow Wireframe) */
-.heart-3d-canvas {
-  width: clamp(220px, 58vw, 360px);
-  height: clamp(220px, 58vw, 360px);
-  display: block;
-  pointer-events: auto;
-  filter: drop-shadow(0 0 10px rgba(255, 51, 153, 0.85))
-          drop-shadow(0 0 25px rgba(255, 20, 147, 0.55));
+/* 1 Vòng viền trái tim 3D xoay 360 độ liên tục tại chỗ */
+.single-heart-frame {
+  width: clamp(130px, 32vw, 200px);
+  height: clamp(130px, 32vw, 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  animation: spinSingleHeart360 6.5s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 51, 153, 0.95))
+          drop-shadow(0 0 25px rgba(255, 20, 147, 0.8))
+          drop-shadow(0 0 50px rgba(255, 0, 128, 0.5));
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
 }
 
-.center-heart-wrapper:hover .heart-3d-canvas {
-  filter: drop-shadow(0 0 14px rgba(255, 102, 178, 1))
-          drop-shadow(0 0 35px rgba(255, 20, 147, 0.85))
-          drop-shadow(0 0 60px rgba(255, 0, 128, 0.6));
+.heart-outline-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
 }
 
-.center-heart-wrapper:active .heart-3d-canvas {
-  transform: scale(0.96);
+.center-heart-wrapper:hover .single-heart-frame {
+  filter: drop-shadow(0 0 14px rgba(255, 102, 178, 1))
+          drop-shadow(0 0 35px rgba(255, 20, 147, 0.95))
+          drop-shadow(0 0 70px rgba(255, 0, 128, 0.75));
+}
+
+.single-heart-frame.thump {
+  animation: singleHeartThump 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), spinSingleHeart360Fast 1.2s ease-in-out !important;
+}
+
+/* Chuyển động xoay 360 độ quanh trục với góc nghiêng 3D tự nhiên */
+@keyframes spinSingleHeart360 {
+  0% {
+    transform: perspective(850px) rotateX(14deg) rotateY(0deg) scale(1);
+  }
+  25% {
+    transform: perspective(850px) rotateX(14deg) rotateY(90deg) scale(1.05);
+  }
+  50% {
+    transform: perspective(850px) rotateX(14deg) rotateY(180deg) scale(1.09);
+  }
+  75% {
+    transform: perspective(850px) rotateX(14deg) rotateY(270deg) scale(1.05);
+  }
+  100% {
+    transform: perspective(850px) rotateX(14deg) rotateY(360deg) scale(1);
+  }
+}
+
+@keyframes spinSingleHeart360Fast {
+  0% {
+    transform: perspective(850px) rotateX(14deg) rotateY(0deg) scale(1.25);
+  }
+  100% {
+    transform: perspective(850px) rotateX(14deg) rotateY(720deg) scale(1);
+  }
+}
+
+@keyframes singleHeartThump {
+  0%, 100% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.35);
+  }
+  65% {
+    transform: scale(0.95);
+  }
 }
 
 @keyframes auraPulse {
@@ -182,6 +234,7 @@ body {
       0 0 28px rgba(255, 0, 128, 0.65),
       0 0 45px rgba(217, 0, 108, 0.45);
   }
+
   100% {
     color: #ff66b2;
     text-shadow:
@@ -201,16 +254,20 @@ body {
     transform: translate3d(0, 0, 0) rotate(0deg);
     opacity: 0;
   }
+
   8% {
     opacity: 0.9;
   }
+
   50% {
     transform: translate3d(var(--drift, 18px), calc(50dvh + 25px), 0) rotate(var(--rot, 15deg));
     opacity: 0.85;
   }
+
   88% {
     opacity: 0.75;
   }
+
   100% {
     transform: translate3d(calc(var(--drift, 18px) * 1.6), calc(100dvh + 60px), 0) rotate(calc(var(--rot, 15deg) * 2));
     opacity: 0;
@@ -222,15 +279,19 @@ body {
     transform: translate3d(0, 0, 0);
     opacity: 0;
   }
+
   10% {
     opacity: 0.95;
   }
+
   50% {
     transform: translate3d(var(--drift-msg, 12px), calc(50dvh + 30px), 0);
   }
+
   88% {
     opacity: 0.85;
   }
+
   100% {
     transform: translate3d(calc(var(--drift-msg, 12px) * 1.8), calc(100dvh + 80px), 0);
     opacity: 0;
