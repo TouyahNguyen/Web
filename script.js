@@ -116,9 +116,6 @@ animateStars();
 const heartsContainer = document.getElementById('hearts-container');
 
 function spawnHeart() {
-  // Tránh dồn quá nhiều phần tử DOM cùng lúc
-  if (heartsContainer.childElementCount > 65) return;
-
   const heart = document.createElement('div');
   heart.classList.add('falling-heart');
 
@@ -140,17 +137,16 @@ function spawnHeart() {
   heart.appendChild(createHeartSVG(color, size));
   heartsContainer.appendChild(heart);
 
+  // Tự động xóa khi hoàn tất đường bay, đảm bảo rơi liên tục không nghẽn
   setTimeout(() => {
     if (heart.parentNode) heart.parentNode.removeChild(heart);
-  }, duration * 1000 + 200);
+  }, duration * 1000 + 100);
 }
 
 // ============================================
 // CHỮ YÊU THƯƠNG RƠI CHẬM RÃI (Pale Neon Pink)
 // ============================================
 function spawnFallingMessage() {
-  if (heartsContainer.childElementCount > 55) return;
-
   const el = document.createElement('div');
   el.classList.add('falling-message');
   el.textContent = fallingTexts[Math.floor(Math.random() * fallingTexts.length)];
@@ -162,14 +158,15 @@ function spawnFallingMessage() {
   const driftMsg = (Math.random() - 0.5) * 35;
 
   el.style.left = `${left}%`;
-  el.style.animationDuration = `${duration}s, 4s`;
+  el.style.animationDuration = `${duration}s, 2.5s`;
   el.style.setProperty('--drift-msg', `${driftMsg}px`);
 
   heartsContainer.appendChild(el);
 
+  // Tự động xóa khi chạm đáy, rơi liên tục đều đặn
   setTimeout(() => {
     if (el.parentNode) el.parentNode.removeChild(el);
-  }, duration * 1000 + 200);
+  }, duration * 1000 + 100);
 }
 
 
@@ -290,24 +287,25 @@ document.addEventListener('pointerdown', (e) => {
 function init() {
   animateFireworks();
 
-  // Nhịp độ rơi trái tim: tăng tần suất 10% (585ms/trái tim)
-  setInterval(spawnHeart, 585);
+  // Nhịp độ rơi trái tim: giảm 10% (650ms/trái tim) - rơi liên tục không ngừng
+  setInterval(spawnHeart, 650);
 
-  // Nhịp độ thông điệp rơi: tăng tần suất 29% (~2.15 giây/thông điệp)
-  setInterval(spawnFallingMessage, 2150);
+  // Nhịp độ thông điệp rơi: đúng 1 giây rơi 1 chữ (1000ms) - rơi liên tục không ngừng
+  setInterval(spawnFallingMessage, 1000);
 
   // Pháo hoa tự động phát sáng êm dịu mỗi 4.2 giây
   setInterval(() => {
     launchFirework();
   }, 4200);
 
-  // Hiệu ứng ban đầu khi vừa tải trang
+  // Hiệu ứng ban đầu khi vừa tải trang: lập tức xuất hiện, không bị trống
+  spawnHeart();
+  spawnFallingMessage();
   setTimeout(() => {
-    for (let i = 0; i < 5; i++) setTimeout(() => spawnHeart(), i * 160);
+    for (let i = 0; i < 4; i++) setTimeout(() => spawnHeart(), i * 180);
     setTimeout(() => launchFirework(), 300);
-    setTimeout(() => spawnFallingMessage(), 400);
-    setTimeout(() => spawnFallingMessage(), 1200);
-  }, 200);
+    setTimeout(() => spawnFallingMessage(), 500);
+  }, 100);
 }
 
 if (document.readyState === 'loading') {
