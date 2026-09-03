@@ -172,37 +172,7 @@ function spawnFallingMessage() {
   }, duration * 1000 + 200);
 }
 
-// ============================================
-// 1 VÒNG KHUNG TRÁI TIM DUY NHẤT (Single Neon Outline Heart)
-// Tương tác chạm / click: xoay tít, đập mạnh và bung pháo hoa
-// ============================================
-function setupSingleHeartInteraction() {
-  const centerHeart = document.getElementById('center-heart');
-  if (!centerHeart) return;
 
-  centerHeart.addEventListener('pointerdown', (e) => {
-    e.stopPropagation();
-
-    const frame = centerHeart.querySelector('.single-heart-frame');
-    if (frame) {
-      frame.classList.remove('thump');
-      void frame.offsetWidth; // Kích hoạt reflow để chạy lại animation nhịp đập
-      frame.classList.add('thump');
-    }
-
-    const rect = centerHeart.getBoundingClientRect();
-    const heartCx = rect.left + rect.width / 2;
-    const heartCy = rect.top + rect.height / 2;
-
-    // Nổ pháo hoa hồng neon ngay tâm trái tim
-    explodeAt(heartCx, heartCy);
-
-    // Bung 6 trái tim neon bay ra xung quanh
-    for (let i = 0; i < 6; i++) {
-      setTimeout(() => spawnHeart(), i * 80);
-    }
-  });
-}
 
 // ============================================
 // PHÁO HOA HỒNG NEON (High Performance Canvas)
@@ -318,7 +288,6 @@ document.addEventListener('pointerdown', (e) => {
 // KHỞI ĐỘNG CÁC VÒNG LẶP (Chu kỳ êm dịu, không giật lag)
 // ============================================
 function init() {
-  setupSingleHeartInteraction();
   animateFireworks();
 
   // Nhịp độ rơi trái tim: tăng tần suất 10% (585ms/trái tim)
