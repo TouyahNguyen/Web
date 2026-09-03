@@ -5,13 +5,12 @@
 
 // === Falling text (Chữ rơi màu Hồng Neon ngọt ngào) ===
 const fallingTexts = [
-  "Yêu em 💕",
   "Mãi bên nhau 🌸",
   "Hạnh phúc 🥰",
-  "Nhớ em 💗",
+  "Nhớ bà 💗",
   "My Love 💖",
   "Forever 💓",
-  "Yêu thương 💝",
+  "Yêu 💝",
   "Ngọt ngào ✨",
   "Mãi yêu 💘",
   "I Love You 💕",
@@ -150,7 +149,7 @@ function spawnHeart() {
 // CHỮ YÊU THƯƠNG RƠI CHẬM RÃI (Pale Neon Pink)
 // ============================================
 function spawnFallingMessage() {
-  if (heartsContainer.childElementCount > 40) return;
+  if (heartsContainer.childElementCount > 55) return;
 
   const el = document.createElement('div');
   el.classList.add('falling-message');
@@ -325,8 +324,8 @@ function init() {
   // Nhịp độ rơi trái tim êm đềm: 650ms/trái tim (rất mượt mà)
   setInterval(spawnHeart, 650);
 
-  // Nhịp độ thông điệp rơi chậm rãi: 2.8 giây/thông điệp (dễ đọc, thư thái)
-  setInterval(spawnFallingMessage, 2800);
+  // Nhịp độ thông điệp rơi: tăng tần suất 29% (~2.15 giây/thông điệp)
+  setInterval(spawnFallingMessage, 2150);
 
   // Pháo hoa tự động phát sáng êm dịu mỗi 4.2 giây
   setInterval(() => {
@@ -337,7 +336,8 @@ function init() {
   setTimeout(() => {
     for (let i = 0; i < 5; i++) setTimeout(() => spawnHeart(), i * 160);
     setTimeout(() => launchFirework(), 300);
-    setTimeout(() => spawnFallingMessage(), 500);
+    setTimeout(() => spawnFallingMessage(), 400);
+    setTimeout(() => spawnFallingMessage(), 1200);
   }, 200);
 }
 
