@@ -113,7 +113,7 @@ body {
   transform: translate3d(0, 0, 0);
 }
 
-/* === Center 360° Rotating Neon Heart (Trái Tim Xoay 360 Độ Tại Chỗ) === */
+/* === Center 3D Wireframe Heart (Khung Trái Tim 3D Phát Sáng) === */
 .center-heart-wrapper {
   position: fixed;
   top: 50%;
@@ -123,7 +123,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 900px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
@@ -132,95 +131,34 @@ body {
 /* Vòng hào quang phát sáng neon hồng */
 .neon-aura {
   position: absolute;
-  width: clamp(170px, 42vw, 260px);
-  height: clamp(170px, 42vw, 260px);
+  width: clamp(200px, 50vw, 320px);
+  height: clamp(200px, 50vw, 320px);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 20, 147, 0.45) 0%, rgba(255, 0, 128, 0.18) 50%, transparent 72%);
-  animation: auraPulse 3s ease-in-out infinite alternate;
+  background: radial-gradient(circle, rgba(255, 20, 147, 0.35) 0%, rgba(255, 0, 128, 0.12) 50%, transparent 72%);
+  animation: auraPulse 3.5s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
-/* Lõi trái tim 3D xoay 360 độ liên tục tại chỗ */
-.neon-heart-core {
-  width: clamp(110px, 28vw, 175px);
-  height: clamp(110px, 28vw, 175px);
-  position: relative;
-  transform-style: preserve-3d;
-  animation: rotateHeart360 5.5s linear infinite;
-  filter: drop-shadow(0 0 10px rgba(255, 51, 153, 0.95))
-          drop-shadow(0 0 24px rgba(255, 20, 147, 0.8))
-          drop-shadow(0 0 50px rgba(255, 0, 128, 0.55));
+/* Canvas dựng khung dây trái tim 3D (Hollow Wireframe) */
+.heart-3d-canvas {
+  width: clamp(220px, 58vw, 360px);
+  height: clamp(220px, 58vw, 360px);
+  display: block;
+  pointer-events: auto;
+  filter: drop-shadow(0 0 10px rgba(255, 51, 153, 0.85))
+          drop-shadow(0 0 25px rgba(255, 20, 147, 0.55));
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
 }
 
-.center-heart-wrapper:hover .neon-heart-core {
-  filter: drop-shadow(0 0 15px rgba(255, 102, 178, 1))
-          drop-shadow(0 0 35px rgba(255, 20, 147, 0.95))
-          drop-shadow(0 0 70px rgba(255, 0, 128, 0.75));
+.center-heart-wrapper:hover .heart-3d-canvas {
+  filter: drop-shadow(0 0 14px rgba(255, 102, 178, 1))
+          drop-shadow(0 0 35px rgba(255, 20, 147, 0.85))
+          drop-shadow(0 0 60px rgba(255, 0, 128, 0.6));
 }
 
-.neon-heart-core.thump {
-  animation: rotateHeart360Fast 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), heartThump 0.6s ease-in-out !important;
-}
-
-/* Các lớp trái tim tạo độ khối 3D */
-.heart-layer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  backface-visibility: visible;
-}
-
-.heart-layer.front {
-  transform: translateZ(9px);
-}
-
-.heart-layer.back {
-  transform: translateZ(-9px) rotateY(180deg);
-}
-
-/* ============================================
-   KEYFRAMES: CHUYỂN ĐỘNG XOAY 360 ĐỘ & HIỆU ỨNG NEON
-   ============================================ */
-@keyframes rotateHeart360 {
-  0% {
-    transform: rotateY(0deg) scale(1);
-  }
-  25% {
-    transform: rotateY(90deg) scale(1.05);
-  }
-  50% {
-    transform: rotateY(180deg) scale(1.1);
-  }
-  75% {
-    transform: rotateY(270deg) scale(1.05);
-  }
-  100% {
-    transform: rotateY(360deg) scale(1);
-  }
-}
-
-@keyframes rotateHeart360Fast {
-  0% {
-    transform: rotateY(0deg) scale(1.25);
-  }
-  100% {
-    transform: rotateY(720deg) scale(1);
-  }
-}
-
-@keyframes heartThump {
-  0%, 100% {
-    transform: scale(1);
-  }
-  30% {
-    transform: scale(1.32);
-  }
-  60% {
-    transform: scale(0.95);
-  }
+.center-heart-wrapper:active .heart-3d-canvas {
+  transform: scale(0.96);
 }
 
 @keyframes auraPulse {

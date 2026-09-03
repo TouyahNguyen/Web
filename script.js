@@ -174,30 +174,243 @@ function spawnFallingMessage() {
 }
 
 // ============================================
-// TRÁI TIM 360° TRUNG TÂM (Tương tác chạm / click)
+// KHUNG TRÁI TIM 3D DÂY RỖNG (3D Wireframe Neon Heart)
+// Hoàn toàn không đặc full, chỉ có khung viền 3D phát sáng xoay 360°
 // ============================================
-function setupCenterHeart() {
+let trigger3DHeartThump = null;
+
+function setup3DHeartWireframe() {
+  const canvas = document.getElementById('heart-3d-canvas');
   const centerHeart = document.getElementById('center-heart');
-  if (!centerHeart) return;
+  if (!canvas || !centerHeart) return;
 
-  centerHeart.addEventListener('pointerdown', (e) => {
-    e.stopPropagation(); // Không kích hoạt sự kiện chạm toàn màn hình trùng lặp
+  const ctx = canvas.getContext('2d');
+  let w = 0;
+  let h = 0;
+  let cx = 0;
+  let cy = 0;
+  let baseScale = 1;
 
-    const core = centerHeart.querySelector('.neon-heart-core');
-    if (core) {
-      core.classList.remove('thump');
-      void core.offsetWidth; // Kích hoạt reflow để chạy lại animation
-      core.classList.add('thump');
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    w = rect.width;
+    h = rect.height;
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+    cx = w / 2;
+    cy = h / 2;
+    // Tỉ lệ vừa vặn và cân đối trong khung
+    baseScale = Math.min(w, h) / 38;
+  }
+
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  // 1. Tạo tập điểm đường viền trái tim 2D chuẩn Fourier
+  const SAMPLES = 60;
+  const baseHeart = [];
+  for (let i = 0; i <= SAMPLES; i++) {
+    const t = (i / SAMPLES) * Math.PI * 2;
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+    // Căn giữa trục Y để tim xoay cân đối quanh tâm (0, 0)
+    baseHeart.push({ x, y: y - 2.2 });
+  }
+
+  // 2. Dựng các nan khung dọc (Meridian Ribs) xoay quanh trục Y
+  const NUM_RIBS = 10;
+  const ribs3D = [];
+  for (let m = 0; m < NUM_RIBS; m++) {
+    const phi = (m / NUM_RIBS) * Math.PI;
+    const rib = [];
+    for (let i = 0; i <= SAMPLES; i++) {
+      const pt = baseHeart[i];
+      rib.push({
+        x: pt.x * Math.cos(phi),
+        y: pt.y,
+        z: pt.x * Math.sin(phi) * 0.52 // Độ dày Z thanh thoát tạo phom tim 3D
+      });
+    }
+    ribs3D.push(rib);
+  }
+
+  // 3. Dựng các vòng đai khung ngang (Latitude Hoops) liên kết các nan dọc
+  const hoopIndices = [6, 12, 18, 24, 30, 36, 42, 48];
+  const hoops3D = [];
+  for (let k = 0; k < hoopIndices.length; k++) {
+    const idx = hoopIndices[k];
+    const pt = baseHeart[idx];
+    const hoop = [];
+    const HOOP_SAMPLES = 28;
+    for (let s = 0; s <= HOOP_SAMPLES; s++) {
+      const theta = (s / HOOP_SAMPLES) * Math.PI * 2;
+      hoop.push({
+        x: Math.abs(pt.x) * Math.cos(theta),
+        y: pt.y,
+        z: Math.abs(pt.x) * Math.sin(theta) * 0.52
+      });
+    }
+    hoops3D.push(hoop);
+  }
+
+  // Biến điều khiển chuyển động 3D
+  let rotY = 0;
+  const tiltX = 0.22; // Góc nghiêng 12.6 độ nhìn từ trên xuống để thấy rõ khoảng rỗng bên trong
+  let time = 0;
+  let extraSpin = 0;
+  let thump = 1;
+
+  // Chiếu điểm 3D sang màn hình 2D với phối cảnh chiều sâu
+  const fov = 350;
+  function project(p3, scaleFactor) {
+    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+    const x1 = p3.x * cosY - p3.z * sinY;
+    const z1 = p3.x * sinY + p3.z * cosY;
+
+    const cosX = Math.cos(tiltX), sinX = Math.sin(tiltX);
+    const y2 = p3.y * cosX - z1 * sinX;
+    const z2 = p3.y * sinX + z1 * cosX;
+
+    const p = fov / (fov + z2);
+    return {
+      x: cx + x1 * scaleFactor * p,
+      y: cy + y2 * scaleFactor * p,
+      z: z2,
+      proj: p
+    };
+  }
+
+  // Vòng lặp vẽ khung dây 3D
+  function render3DHeart() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.globalCompositeOperation = 'lighter'; // Hòa trộn phát sáng neon rực rỡ
+
+    time += 0.038;
+    rotY += (0.011 + extraSpin);
+    extraSpin *= 0.94;
+    thump = 1 + (thump - 1) * 0.88;
+
+    // Nhịp đập trái tim tự nhiên (lub-dub)
+    const cycle = (time * 2.5) % (Math.PI * 2);
+    let beat = 1;
+    if (cycle < 0.28) {
+      beat = 1 + Math.sin(cycle / 0.28 * Math.PI) * 0.08;
+    } else if (cycle > 0.36 && cycle < 0.6) {
+      beat = 1 + Math.sin((cycle - 0.36) / 0.24 * Math.PI) * 0.04;
     }
 
+    const currentScale = baseScale * beat * thump;
+
+    // 1. Vẽ các vòng đai khung ngang (nằm ở lớp nền khung rỗng)
+    for (let hIdx = 0; hIdx < hoops3D.length; hIdx++) {
+      const hoop = hoops3D[hIdx];
+      ctx.beginPath();
+      for (let s = 0; s < hoop.length; s++) {
+        const pt2d = project(hoop[s], currentScale);
+        if (s === 0) ctx.moveTo(pt2d.x, pt2d.y);
+        else ctx.lineTo(pt2d.x, pt2d.y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = 'rgba(255, 20, 147, 0.32)';
+      ctx.lineWidth = 1.1;
+      ctx.stroke();
+    }
+
+    // 2. Chiếu và sắp xếp các nan dọc theo chiều sâu Z
+    const renderedRibs = [];
+    for (let m = 0; m < ribs3D.length; m++) {
+      const rib = ribs3D[m];
+      const pts2d = [];
+      let sumZ = 0;
+      for (let i = 0; i < rib.length; i++) {
+        const p2 = project(rib[i], currentScale);
+        pts2d.push(p2);
+        sumZ += p2.z;
+      }
+      renderedRibs.push({
+        pts: pts2d,
+        avgZ: sumZ / rib.length
+      });
+    }
+
+    // Sắp xếp vẽ các nan ở xa (Z dương) trước, nan ở gần (Z âm) sau
+    renderedRibs.sort((a, b) => b.avgZ - a.avgZ);
+
+    for (let r = 0; r < renderedRibs.length; r++) {
+      const item = renderedRibs[r];
+      const pts = item.pts;
+      const isFront = item.avgZ < 0;
+
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length; i++) {
+        ctx.lineTo(pts[i].x, pts[i].y);
+      }
+
+      if (isFront) {
+        // Nan phía trước: Viền Hồng Neon phát sáng đậm nét
+        ctx.strokeStyle = 'rgba(255, 20, 147, 0.45)';
+        ctx.lineWidth = 3.2;
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(255, 51, 153, 0.95)';
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+
+        // Đường lõi sáng trắng hồng
+        ctx.strokeStyle = 'rgba(255, 200, 235, 0.8)';
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      } else {
+        // Nan phía sau: Viền mờ dịu mắt, thể hiện độ trong suốt nhìn xuyên qua
+        ctx.strokeStyle = 'rgba(217, 0, 108, 0.3)';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      }
+    }
+
+    // 3. Điểm phát sáng lấp lánh tại các mắt lưới phía trước (Constellation Nodes)
+    for (let r = 0; r < renderedRibs.length; r++) {
+      const item = renderedRibs[r];
+      if (item.avgZ < 0) {
+        for (let k = 0; k < hoopIndices.length; k += 2) {
+          const pt = item.pts[hoopIndices[k]];
+          if (pt) {
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, 1.8 * pt.proj, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 235, 248, 0.9)';
+            ctx.fill();
+          }
+        }
+      }
+    }
+
+    requestAnimationFrame(render3DHeart);
+  }
+
+  render3DHeart();
+
+  // Xử lý chạm / click vào khung tim 3D
+  trigger3DHeartThump = function() {
+    extraSpin = 0.085;
+    thump = 1.35;
+  };
+
+  centerHeart.addEventListener('pointerdown', (e) => {
+    e.stopPropagation();
+    if (trigger3DHeartThump) trigger3DHeartThump();
+
     const rect = centerHeart.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
+    const heartCx = rect.left + rect.width / 2;
+    const heartCy = rect.top + rect.height / 2;
 
-    // Nổ chùm pháo hoa rực rỡ ngay tâm trái tim
-    explodeAt(cx, cy);
+    // Bắn chùm pháo hoa rực rỡ ngay tâm khung tim
+    explodeAt(heartCx, heartCy);
 
-    // Bung 6 trái tim neon bay xung quanh
+    // Bung 6 trái tim bay xung quanh
     for (let i = 0; i < 6; i++) {
       setTimeout(() => spawnHeart(), i * 80);
     }
@@ -318,7 +531,7 @@ document.addEventListener('pointerdown', (e) => {
 // KHỞI ĐỘNG CÁC VÒNG LẶP (Chu kỳ êm dịu, không giật lag)
 // ============================================
 function init() {
-  setupCenterHeart();
+  setup3DHeartWireframe();
   animateFireworks();
 
   // Nhịp độ rơi trái tim êm đềm: 650ms/trái tim (rất mượt mà)
