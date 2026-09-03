@@ -1,9 +1,20 @@
 /* ============================================
-   LOVE PAGE - Soft Pink Night + Neon Blue/Pink Text
-   Mobile-First Optimized
+   LOVE PAGE - Pale Neon Pink Theme (Hồng Neon Nhạt)
+   Silky Smooth & Mobile-Optimized Performance
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap');
+
+:root {
+  --neon-pink-light: #fff0f7;
+  --neon-pink-pale: #ffd1e8;
+  --neon-pink-soft: #ffb3db;
+  --neon-pink-main: #ffa1d2;
+  --neon-pink-glow: #ff7ab8;
+  --neon-pink-accent: #ff529a;
+  
+  --bg-gradient: radial-gradient(ellipse at 50% 40%, #351025 0%, #200817 50%, #0d010a 100%);
+}
 
 * {
   margin: 0;
@@ -25,8 +36,8 @@ html, body {
 }
 
 body {
-  /* Nền hồng đen êm dịu, lãng mạn */
-  background: radial-gradient(circle at 50% 45%, #2a0b1c 0%, #1a0612 50%, #0d0208 100%);
+  /* Nền hồng tím đêm huyền ảo, phát sáng dịu nhẹ */
+  background: var(--bg-gradient);
   font-family: 'Dancing Script', cursive;
 }
 
@@ -64,126 +75,226 @@ body {
   overflow: hidden;
 }
 
-/* === Falling Heart === */
+/* === Falling Heart - Bay lượn nhẹ nhàng bồng bềnh === */
 .falling-heart {
   position: absolute;
-  top: -60px;
-  animation: fallDown linear forwards;
+  top: -50px;
+  animation: floatDownSmooth linear forwards;
   pointer-events: none;
-  filter: drop-shadow(0 0 8px rgba(255, 77, 109, 0.6))
-          drop-shadow(0 0 16px rgba(255, 105, 180, 0.4));
+  filter: drop-shadow(0 0 6px rgba(255, 145, 195, 0.6));
   will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
 }
 
 .falling-heart svg {
   width: 100%;
   height: 100%;
+  display: block;
 }
 
-/* === Falling Message - Lớn hơn, đổi màu xanh dương <-> hồng chậm rãi === */
+/* === Falling Message - Hồng Neon Rực Rỡ, Phát Sáng Lung Linh === */
 .falling-message {
   position: absolute;
-  top: -70px;
+  top: -60px;
   font-family: 'Dancing Script', cursive;
-  font-size: clamp(1.15rem, 4.5vw, 1.6rem);
+  font-size: clamp(1.2rem, 4.4vw, 1.65rem);
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   white-space: nowrap;
-  animation: fallDownMessage linear forwards, slowBluePinkShift 8s ease-in-out infinite alternate;
+  color: #ff3399;
+  text-shadow:
+    0 0 6px rgba(255, 51, 153, 0.95),
+    0 0 14px rgba(255, 20, 147, 0.85),
+    0 0 28px rgba(255, 0, 128, 0.65),
+    0 0 48px rgba(217, 0, 108, 0.45);
+  animation: floatDownMessage linear forwards, vibrantNeonPinkGlow 2.5s ease-in-out infinite alternate;
   pointer-events: none;
   will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
 }
 
-/* === Center Message - Tối ưu cho điện thoại, chữ lớn & đổi màu chậm rãi === */
-.center-message {
+/* === Center 360° Rotating Neon Heart (Trái Tim Xoay 360 Độ Tại Chỗ) === */
+.center-heart-wrapper {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate3d(-50%, -50%, 0);
   z-index: 10;
-  font-family: 'Dancing Script', cursive;
-  font-size: clamp(1.45rem, 6.2vw, 2.5rem);
-  font-weight: 700;
-  line-height: 1.5;
-  text-align: center;
-  width: 90vw;
-  max-width: 580px;
-  padding: 0.8rem 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 900px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Vòng hào quang phát sáng neon hồng */
+.neon-aura {
+  position: absolute;
+  width: clamp(170px, 42vw, 260px);
+  height: clamp(170px, 42vw, 260px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 20, 147, 0.45) 0%, rgba(255, 0, 128, 0.18) 50%, transparent 72%);
+  animation: auraPulse 3s ease-in-out infinite alternate;
   pointer-events: none;
-  animation: slowBluePinkShift 9s ease-in-out infinite alternate;
-  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: opacity, transform;
 }
 
-.center-message.fade-out {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.94);
+/* Lõi trái tim 3D xoay 360 độ liên tục tại chỗ */
+.neon-heart-core {
+  width: clamp(110px, 28vw, 175px);
+  height: clamp(110px, 28vw, 175px);
+  position: relative;
+  transform-style: preserve-3d;
+  animation: rotateHeart360 5.5s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 51, 153, 0.95))
+          drop-shadow(0 0 24px rgba(255, 20, 147, 0.8))
+          drop-shadow(0 0 50px rgba(255, 0, 128, 0.55));
+  will-change: transform;
 }
 
-.center-message.fade-in {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
+.center-heart-wrapper:hover .neon-heart-core {
+  filter: drop-shadow(0 0 15px rgba(255, 102, 178, 1))
+          drop-shadow(0 0 35px rgba(255, 20, 147, 0.95))
+          drop-shadow(0 0 70px rgba(255, 0, 128, 0.75));
+}
+
+.neon-heart-core.thump {
+  animation: rotateHeart360Fast 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), heartThump 0.6s ease-in-out !important;
+}
+
+/* Các lớp trái tim tạo độ khối 3D */
+.heart-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  backface-visibility: visible;
+}
+
+.heart-layer.front {
+  transform: translateZ(9px);
+}
+
+.heart-layer.back {
+  transform: translateZ(-9px) rotateY(180deg);
 }
 
 /* ============================================
-   CHUYỂN MÀU CHẬM RÃI GIỮA XANH DƯƠNG VÀ HỒNG
+   KEYFRAMES: CHUYỂN ĐỘNG XOAY 360 ĐỘ & HIỆU ỨNG NEON
    ============================================ */
-@keyframes slowBluePinkShift {
+@keyframes rotateHeart360 {
   0% {
-    color: #ffb3c6;
-    text-shadow:
-      0 0 6px rgba(255, 77, 109, 0.8),
-      0 0 16px rgba(255, 105, 180, 0.5),
-      0 0 32px rgba(255, 45, 117, 0.35);
+    transform: rotateY(0deg) scale(1);
   }
-  30% {
-    color: #f7c5e6;
-    text-shadow:
-      0 0 6px rgba(236, 72, 153, 0.8),
-      0 0 16px rgba(217, 70, 239, 0.45),
-      0 0 32px rgba(168, 85, 247, 0.3);
+  25% {
+    transform: rotateY(90deg) scale(1.05);
   }
-  70% {
-    color: #bfe5ff;
-    text-shadow:
-      0 0 6px rgba(56, 189, 248, 0.8),
-      0 0 16px rgba(14, 165, 233, 0.5),
-      0 0 32px rgba(2, 132, 199, 0.35);
+  50% {
+    transform: rotateY(180deg) scale(1.1);
+  }
+  75% {
+    transform: rotateY(270deg) scale(1.05);
   }
   100% {
-    color: #99d8ff;
-    text-shadow:
-      0 0 7px rgba(14, 165, 233, 0.9),
-      0 0 18px rgba(2, 132, 199, 0.55),
-      0 0 35px rgba(3, 105, 161, 0.4);
+    transform: rotateY(360deg) scale(1);
   }
 }
 
-/* === Animations === */
-@keyframes fallDown {
+@keyframes rotateHeart360Fast {
   0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 0.95;
+    transform: rotateY(0deg) scale(1.25);
   }
   100% {
-    transform: translateY(calc(100dvh + 70px)) rotate(360deg);
+    transform: rotateY(720deg) scale(1);
+  }
+}
+
+@keyframes heartThump {
+  0%, 100% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.32);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+}
+
+@keyframes auraPulse {
+  0% {
+    transform: scale(0.88);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.22);
+    opacity: 1;
+  }
+}
+
+/* Hiệu ứng thở màu chữ Hồng Neon */
+@keyframes vibrantNeonPinkGlow {
+  0% {
+    color: #ff3399;
+    text-shadow:
+      0 0 6px rgba(255, 51, 153, 0.95),
+      0 0 14px rgba(255, 20, 147, 0.85),
+      0 0 28px rgba(255, 0, 128, 0.65),
+      0 0 45px rgba(217, 0, 108, 0.45);
+  }
+  100% {
+    color: #ff66b2;
+    text-shadow:
+      0 0 8px rgba(255, 102, 178, 1),
+      0 0 18px rgba(255, 51, 153, 0.9),
+      0 0 35px rgba(255, 20, 147, 0.75),
+      0 0 60px rgba(255, 0, 128, 0.55);
+  }
+}
+
+/* ============================================
+   CHUYỂN ĐỘNG RƠI MƯỢT MÀ, ÊM ÁI (SMOOTH FLOAT)
+   Không bị giật lag, đung đưa tự nhiên
+   ============================================ */
+@keyframes floatDownSmooth {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate3d(var(--drift, 18px), calc(50dvh + 25px), 0) rotate(var(--rot, 15deg));
+    opacity: 0.85;
+  }
+  88% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate3d(calc(var(--drift, 18px) * 1.6), calc(100dvh + 60px), 0) rotate(calc(var(--rot, 15deg) * 2));
     opacity: 0;
   }
 }
 
-@keyframes fallDownMessage {
+@keyframes floatDownMessage {
   0% {
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
     opacity: 0;
   }
   10% {
     opacity: 0.95;
   }
-  85% {
+  50% {
+    transform: translate3d(var(--drift-msg, 12px), calc(50dvh + 30px), 0);
+  }
+  88% {
     opacity: 0.85;
   }
   100% {
-    transform: translateY(calc(100dvh + 90px));
+    transform: translate3d(calc(var(--drift-msg, 12px) * 1.8), calc(100dvh + 80px), 0);
     opacity: 0;
   }
 }

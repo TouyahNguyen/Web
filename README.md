@@ -1,19 +1,15 @@
-# 💕 Gửi Yêu Thương - Love Web App & QR Generator
+# 💕 Gửi Yêu Thương - Love Web App
 
-Một ứng dụng web lãng mạn với hiệu ứng bầu trời sao, pháo hoa rực rỡ, trái tim rơi cùng các thông điệp yêu thương và công cụ tạo mã QR Code tiện lợi.
+Một ứng dụng web tĩnh lãng mạn với tone màu Hồng Neon phát sáng, hiệu ứng trái tim 3D xoay 360° tại chỗ, mưa trái tim và pháo hoa rực rỡ cùng các thông điệp yêu thương ngọt ngào.
 
 ---
 
 ## ✨ Tính Năng Nổi Bật
 
-- 🌌 **Bầu trời sao & Pháo hoa:** Hiệu ứng hạt Canvas mượt mà, sống động.
-- 💖 **Trái tim & Lời chúc rơi:** Hiệu ứng mưa trái tim với đa dạng màu sắc cùng các dòng chữ ngọt ngào.
-- 💌 **Thông điệp trung tâm:** Tự động chuyển đổi các câu nói ý nghĩa, lãng mạn.
-- 📱 **Responsive Design:** Tối ưu mượt mà trên cả điện thoại và máy tính.
-- 🎨 **Công cụ tạo mã QR Code (`qr-generator.html`):**
-  - Tùy biến nội dung URL hoặc lời nhắn.
-  - Tùy chọn màu sắc QR, màu nền và kiểu dáng mắt QR.
-  - Tải xuống mã QR dưới dạng hình ảnh dễ dàng chia sẻ.
+- 💖 **Trái tim 3D trung tâm xoay 360°:** Trái tim phát sáng neon hồng xoay 360 độ liên tục tại chỗ, tương tác chạm/click nổ pháo hoa và bung nở chùm trái tim.
+- 🌌 **Bầu trời sao & Pháo hoa Neon:** Hiệu ứng Canvas mượt mà 60 FPS, hạt ánh sáng hồng neon kết hợp lấp lánh trắng kim cương.
+- 🌸 **Mưa trái tim & Thông điệp rơi:** Trái tim và chữ rơi bồng bềnh với hiệu ứng chữ phát sáng Hồng Neon rực rỡ.
+- 📱 **Responsive & Siêu Mượt:** Tối ưu hóa GPU phần cứng, không giật lag trên cả điện thoại và máy tính.
 
 ---
 
@@ -22,11 +18,10 @@ Một ứng dụng web lãng mạn với hiệu ứng bầu trời sao, pháo ho
 ```plaintext
 Web/
 ├── .gitignore          # Cấu hình bỏ qua các file rác và IDE
-├── index.html          # Trang chính ứng dụng web tình yêu
-├── style.css           # Định dạng giao diện và hiệu ứng CSS
-├── script.js           # Xử lý logic Canvas (sao, pháo hoa, trái tim)
-├── qr-generator.html   # Trang tạo mã QR Code tình yêu
-└── README.md           # Tài liệu hướng dẫn dự án
+├── index.html          # Trang web chính (HTML5 tĩnh)
+├── style.css           # Giao diện, hiệu ứng chuyển động và tone màu hồng neon
+├── script.js           # Xử lý hiệu ứng Canvas (sao, pháo hoa, trái tim 3D)
+└── README.md           # Tài liệu dự án
 ```
 
 ---
@@ -34,22 +29,20 @@ Web/
 ## 🚀 Hướng Dẫn Sử Dụng
 
 1. **Chạy trực tiếp trên trình duyệt:**
-   - Mở file `index.html` bằng trình duyệt (Chrome, Edge, Safari, Firefox,...).
-   - Mở file `qr-generator.html` để tạo mã QR chia sẻ trang web cho người thương.
+   - Mở file `index.html` bằng trình duyệt bất kỳ (Chrome, Edge, Safari, Firefox,...).
 
 2. **Triển khai qua GitHub Pages:**
    - Vào mục **Settings** của repository trên GitHub.
    - Chọn tab **Pages**.
    - Tại mục **Build and deployment** -> **Branch**, chọn nhánh `main` và thư mục `/(root)`.
-   - Bấm **Save**. Trang web sẽ được xuất bản trực tuyến miễn phí!
+   - Bấm **Save**. Trang web tĩnh sẽ được xuất bản trực tuyến miễn phí!
 
 ---
 
 ## 🛠️ Công Nghệ Sử Dụng
 
-- **HTML5** & **CSS3** (Animations, Flexbox, CSS Grid)
+- **HTML5** & **CSS3** (3D Transforms, CSS Animations, Flexbox)
 - **Vanilla JavaScript** (Canvas API, RequestAnimationFrame)
-- **QR Code Generator Library** (CDN)
 - **Google Fonts** (Dancing Script, Quicksand)
 
 ---

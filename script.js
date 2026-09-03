@@ -1,48 +1,31 @@
 /* ============================================
-   LOVE PAGE - Minimal JS
-   Stars + Hearts + Messages + Fireworks
+   LOVE PAGE - Pale Neon Pink Theme
+   Silky Smooth 60fps & Graceful Motion
    ============================================ */
 
-// === Love Messages (center) ===
-const loveMessages = [
-  "Em là điều tuyệt vời nhất đến trong cuộc đời anh ...",
-  "Yêu em nhiều hơn ngày hôm qua, nhưng ít hơn ngày mai ...",
-  "Cảm ơn em đã luôn ở bên anh ...",
-  "Em là nắng ấm trong ngày đông lạnh giá ...",
-  "Trái tim anh chỉ đập vì em thôi ...",
-  "Mỗi ngày bên em là một ngày hạnh phúc ...",
-  "Em là giấc mơ đẹp nhất mà anh không muốn tỉnh dậy ...",
-  "Gặp em là điều may mắn nhất đời anh ...",
-  "Yêu em từ cái nhìn đầu tiên đến mãi mãi ...",
-  "Em là lý do anh mỉm cười mỗi ngày ...",
-  "Bên em, thời gian như ngừng trôi ...",
-  "Anh muốn cùng em đi đến cuối con đường ...",
-  "Em xinh đẹp nhất khi em cười ...",
-  "Dù có nắng hay mưa mai sau ...",
-];
-
-// === Falling text ===
+// === Falling text (Chữ rơi màu Hồng Neon ngọt ngào) ===
 const fallingTexts = [
-  "Yêu em ❤️",
-  "Mãi bên nhau 💕",
+  "Yêu em 💕",
+  "Mãi bên nhau 🌸",
   "Hạnh phúc 🥰",
   "Nhớ em 💗",
-  "My love 💖",
+  "My Love 💖",
   "Forever 💓",
   "Yêu thương 💝",
-  "Ngọt ngào 🌸",
+  "Ngọt ngào ✨",
   "Mãi yêu 💘",
-  "I love you 💕",
+  "I Love You 💕",
+  "Bình yên 🌷",
 ];
 
-// === Heart colors ===
+// === Bảng màu trái tim rơi: Hồng Neon Rực Rỡ (Vibrant Neon Pink) ===
 const heartColors = [
-  '#ff2d75', '#ff4d6d', '#ff758f', '#ff8fa3',
-  '#ffb3c1', '#ff0a54', '#ff477e', '#ff69b4',
-  '#ff1493', '#e05780', '#ff6b9d', '#c9184a'
+  '#ff1493', '#ff007f', '#ff3399', '#ff66b2',
+  '#ff4d94', '#ff2a85', '#ff529a', '#e60073',
+  '#ff80bf', '#ff99cc', '#ffa6d8', '#ff3b9d'
 ];
 
-// === Create heart SVG ===
+// === Tạo SVG trái tim mượt mà ===
 function createHeartSVG(color, size) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -56,57 +39,70 @@ function createHeartSVG(color, size) {
 }
 
 // ============================================
-// TWINKLING STARS (pink-ish dots)
+// BẦU TRỜI SAO LẤP LÁNH (Tối ưu hiệu năng 60 FPS)
 // ============================================
 const starsCanvas = document.getElementById('stars-canvas');
 const starsCtx = starsCanvas.getContext('2d');
 let stars = [];
 
 function resizeStarsCanvas() {
-  starsCanvas.width = window.innerWidth;
-  starsCanvas.height = window.innerHeight;
+  const dpr = window.devicePixelRatio || 1;
+  starsCanvas.width = window.innerWidth * dpr;
+  starsCanvas.height = window.innerHeight * dpr;
+  starsCtx.scale(dpr, dpr);
   createStars();
+}
+
+function hexToRgb(hex) {
+  const num = parseInt(hex.replace('#', ''), 16);
+  return {
+    r: (num >> 16) & 255,
+    g: (num >> 8) & 255,
+    b: num & 255
+  };
 }
 
 function createStars() {
   stars = [];
-  const count = Math.floor((starsCanvas.width * starsCanvas.height) / 2400);
-  // Bầu trời sao lấp lánh với tông trắng, hồng phấn nhạt và xanh thiên thanh
-  const starPalette = ['#ffffff', '#ffffff', '#ffccd5', '#bae6fd', '#fed7e2'];
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  // Giới hạn số lượng sao tối ưu cho màn hình di động mượt mà
+  const count = Math.min(180, Math.floor((w * h) / 3400));
+  const starPalette = ['#ffffff', '#fff0f7', '#ffd6ed', '#ffbade', '#ffe6f4'];
+
   for (let i = 0; i < count; i++) {
-    const starColor = starPalette[Math.floor(Math.random() * starPalette.length)];
+    const starHex = starPalette[Math.floor(Math.random() * starPalette.length)];
+    const rgb = hexToRgb(starHex);
     stars.push({
-      x: Math.random() * starsCanvas.width,
-      y: Math.random() * starsCanvas.height,
-      radius: Math.random() * 1.3 + 0.2,
+      x: Math.random() * w,
+      y: Math.random() * h,
+      radius: Math.random() * 1.2 + 0.3,
       alpha: Math.random(),
-      alphaSpeed: Math.random() * 0.015 + 0.003,
+      alphaSpeed: Math.random() * 0.012 + 0.003,
       direction: Math.random() > 0.5 ? 1 : -1,
-      color: starColor
+      r: rgb.r,
+      g: rgb.g,
+      b: rgb.b
     });
   }
 }
 
 function animateStars() {
-  starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  starsCtx.clearRect(0, 0, w, h);
 
-  stars.forEach(star => {
+  for (let i = 0; i < stars.length; i++) {
+    const star = stars[i];
     star.alpha += star.alphaSpeed * star.direction;
     if (star.alpha >= 1) { star.alpha = 1; star.direction = -1; }
-    else if (star.alpha <= 0.05) { star.alpha = 0.05; star.direction = 1; }
+    else if (star.alpha <= 0.08) { star.alpha = 0.08; star.direction = 1; }
 
     starsCtx.beginPath();
     starsCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-    if (star.color === '#ffffff') {
-      starsCtx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
-    } else {
-      const r = parseInt(star.color.slice(1, 3), 16);
-      const g = parseInt(star.color.slice(3, 5), 16);
-      const b = parseInt(star.color.slice(5, 7), 16);
-      starsCtx.fillStyle = `rgba(${r}, ${g}, ${b}, ${star.alpha})`;
-    }
+    starsCtx.fillStyle = `rgba(${star.r}, ${star.g}, ${star.b}, ${star.alpha})`;
     starsCtx.fill();
-  });
+  }
 
   requestAnimationFrame(animateStars);
 }
@@ -116,133 +112,163 @@ window.addEventListener('resize', resizeStarsCanvas);
 animateStars();
 
 // ============================================
-// FALLING HEARTS
+// TRÁI TIM RƠI BỒNG BỀNH (Smooth Drift)
 // ============================================
 const heartsContainer = document.getElementById('hearts-container');
 
 function spawnHeart() {
+  // Tránh dồn quá nhiều phần tử DOM cùng lúc
+  if (heartsContainer.childElementCount > 40) return;
+
   const heart = document.createElement('div');
   heart.classList.add('falling-heart');
 
-  const size = Math.random() * 24 + 12;
+  const size = Math.random() * 22 + 14;
   const color = heartColors[Math.floor(Math.random() * heartColors.length)];
-  const left = Math.random() * 92 + 2;
-  const duration = Math.random() * 5 + 4;
+  const left = Math.random() * 92 + 3;
+  // Thời gian rơi chậm rãi, thướt tha (7.5s - 12s)
+  const duration = Math.random() * 4.5 + 7.5;
+  // Độ lắc nhẹ nhàng tự nhiên qua lại (-30px đến 30px)
+  const drift = (Math.random() - 0.5) * 55;
+  const rot = (Math.random() - 0.5) * 40;
 
   heart.style.left = `${left}%`;
   heart.style.animationDuration = `${duration}s`;
-  heart.style.opacity = Math.random() * 0.45 + 0.5;
+  heart.style.opacity = Math.random() * 0.35 + 0.6;
+  heart.style.setProperty('--drift', `${drift}px`);
+  heart.style.setProperty('--rot', `${rot}deg`);
 
   heart.appendChild(createHeartSVG(color, size));
   heartsContainer.appendChild(heart);
 
   setTimeout(() => {
     if (heart.parentNode) heart.parentNode.removeChild(heart);
-  }, duration * 1000 + 300);
+  }, duration * 1000 + 200);
 }
 
 // ============================================
-// FALLING MESSAGES (Tối ưu cho điện thoại & đổi màu xanh/hồng)
+// CHỮ YÊU THƯƠNG RƠI CHẬM RÃI (Pale Neon Pink)
 // ============================================
 function spawnFallingMessage() {
+  if (heartsContainer.childElementCount > 40) return;
+
   const el = document.createElement('div');
   el.classList.add('falling-message');
   el.textContent = fallingTexts[Math.floor(Math.random() * fallingTexts.length)];
 
-  // Trên điện thoại giới hạn vị trí từ 5% đến 68% để chữ to không bị tràn khỏi màn hình
   const isMobile = window.innerWidth < 640;
-  const left = isMobile ? (Math.random() * 62 + 5) : (Math.random() * 75 + 5);
-  const duration = Math.random() * 5 + 5.5;
+  const left = isMobile ? (Math.random() * 60 + 6) : (Math.random() * 74 + 6);
+  // Rơi êm đềm từ 8.5s đến 12.5s
+  const duration = Math.random() * 4 + 8.5;
+  const driftMsg = (Math.random() - 0.5) * 35;
 
   el.style.left = `${left}%`;
-  // duration rơi và duration đổi màu xanh/hồng lệch nhịp tự nhiên
-  el.style.animationDuration = `${duration}s, 8s`;
-  el.style.animationDelay = `0s, -${(Math.random() * 8).toFixed(1)}s`;
+  el.style.animationDuration = `${duration}s, 4s`;
+  el.style.setProperty('--drift-msg', `${driftMsg}px`);
 
   heartsContainer.appendChild(el);
 
   setTimeout(() => {
     if (el.parentNode) el.parentNode.removeChild(el);
-  }, duration * 1000 + 300);
+  }, duration * 1000 + 200);
 }
 
 // ============================================
-// CENTER MESSAGE CYCLE
+// TRÁI TIM 360° TRUNG TÂM (Tương tác chạm / click)
 // ============================================
-const centerMsg = document.getElementById('center-message');
-let msgIndex = 0;
+function setupCenterHeart() {
+  const centerHeart = document.getElementById('center-heart');
+  if (!centerHeart) return;
 
-function cycleMessage() {
-  centerMsg.classList.add('fade-out');
-  centerMsg.classList.remove('fade-in');
+  centerHeart.addEventListener('pointerdown', (e) => {
+    e.stopPropagation(); // Không kích hoạt sự kiện chạm toàn màn hình trùng lặp
 
-  setTimeout(() => {
-    msgIndex = (msgIndex + 1) % loveMessages.length;
-    centerMsg.textContent = loveMessages[msgIndex];
-    centerMsg.classList.remove('fade-out');
-    centerMsg.classList.add('fade-in');
-  }, 600);
+    const core = centerHeart.querySelector('.neon-heart-core');
+    if (core) {
+      core.classList.remove('thump');
+      void core.offsetWidth; // Kích hoạt reflow để chạy lại animation
+      core.classList.add('thump');
+    }
+
+    const rect = centerHeart.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    // Nổ chùm pháo hoa rực rỡ ngay tâm trái tim
+    explodeAt(cx, cy);
+
+    // Bung 6 trái tim neon bay xung quanh
+    for (let i = 0; i < 6; i++) {
+      setTimeout(() => spawnHeart(), i * 80);
+    }
+  });
 }
 
 // ============================================
-// FIREWORKS
+// PHÁO HOA HỒNG NEON (High Performance Canvas)
 // ============================================
 const fwCanvas = document.getElementById('fireworks-canvas');
 const fwCtx = fwCanvas.getContext('2d');
-let fireworks = [];
 let particles = [];
 
 function resizeFwCanvas() {
-  fwCanvas.width = window.innerWidth;
-  fwCanvas.height = window.innerHeight;
+  const dpr = window.devicePixelRatio || 1;
+  fwCanvas.width = window.innerWidth * dpr;
+  fwCanvas.height = window.innerHeight * dpr;
+  fwCtx.scale(dpr, dpr);
 }
 resizeFwCanvas();
 window.addEventListener('resize', resizeFwCanvas);
 
-// Nổ pháo hoa ngay tại vị trí ngẫu nhiên (màu vàng neon nhẹ)
+// Bảng màu pháo hoa: Hồng neon rực rỡ kết hợp trắng kim cương
+const neonPinkFwColors = [
+  '#ffffff', // trắng ngọc phát sáng
+  '#fff0f8', // hồng ngà pha trắng
+  '#ff3399', // hồng neon rực rỡ
+  '#ff1493', // hồng neon đậm
+  '#ff007f', // hồng neon thắm
+  '#ff66b2', // hồng neon sáng
+  '#ff85c8', // hồng neon dịu
+  '#ffd4ec'  // ánh sáng lấp lánh
+];
+
 function explodeAt(x, y) {
-  const count = 40 + Math.floor(Math.random() * 30);
-  // Bảng màu vàng neon nhẹ ấm áp
-  const neonYellowColors = [
-    '#fff9db', // vàng trắng ngà phát sáng
-    '#fff3a1', // vàng pastel neon
-    '#ffea79', // vàng neon êm dịu
-    '#ffd43b', // vàng neon rực rỡ nhẹ
-    '#ffe066', // vàng kem ánh sáng
-    '#ffffff'  // lấp lánh trắng nhẹ
-  ];
+  // Số hạt vừa phải để giữ vững 60 FPS mượt mà tuyệt đối
+  const count = 32 + Math.floor(Math.random() * 18);
 
   for (let i = 0; i < count; i++) {
-    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
-    const speed = Math.random() * 4.2 + 1.2;
+    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.35;
+    const speed = Math.random() * 3.4 + 1.2;
     particles.push({
       x, y,
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
       alpha: 1,
-      decay: Math.random() * 0.015 + 0.008,
-      color: neonYellowColors[Math.floor(Math.random() * neonYellowColors.length)],
-      size: Math.random() * 2.2 + 0.8,
-      gravity: 0.022 + Math.random() * 0.015
+      decay: Math.random() * 0.012 + 0.009,
+      color: neonPinkFwColors[Math.floor(Math.random() * neonPinkFwColors.length)],
+      size: Math.random() * 2.2 + 0.9,
+      gravity: 0.025 + Math.random() * 0.012
     });
   }
 }
 
 function animateFireworks() {
-  // Xóa sạch canvas hoàn toàn mỗi frame - KHÔNG để lại bất kỳ vệt đen hay vết nổ nào
-  fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  fwCtx.clearRect(0, 0, w, h);
   fwCtx.globalCompositeOperation = 'lighter';
 
+  // Lặp qua mảng hạt với hiệu năng cao, không dùng shadowBlur gây lag
   particles = particles.filter(p => {
-    p.x += p.vx; p.y += p.vy;
-    p.vy += p.gravity; p.vx *= 0.99;
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += p.gravity;
+    p.vx *= 0.988;
     p.alpha -= p.decay;
+
     if (p.alpha <= 0) return false;
 
     fwCtx.globalAlpha = p.alpha;
-    fwCtx.shadowBlur = 6;
-    fwCtx.shadowColor = 'rgba(255, 235, 120, 0.6)';
-
     fwCtx.beginPath();
     fwCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     fwCtx.fillStyle = p.color;
@@ -251,22 +277,20 @@ function animateFireworks() {
     return true;
   });
 
-  fwCtx.shadowBlur = 0;
   fwCtx.globalAlpha = 1;
-
   requestAnimationFrame(animateFireworks);
 }
 
 function launchFirework() {
-  // Nổ ngẫu nhiên ở giữa màn hình
-  const x = Math.random() * fwCanvas.width * 0.6 + fwCanvas.width * 0.2;
-  const y = Math.random() * fwCanvas.height * 0.5 + fwCanvas.height * 0.1;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const x = Math.random() * w * 0.7 + w * 0.15;
+  const y = Math.random() * h * 0.5 + h * 0.12;
   explodeAt(x, y);
 }
 
 // ============================================
-// TAP / TOUCH - Tối ưu cho người dùng điện thoại
-// Chạm vào màn hình sẽ nổ pháo hoa ngay tại vị trí ngón tay
+// CHẠM / TƯƠNG TÁC (Tối ưu cho cả điện thoại & máy tính)
 // ============================================
 let lastTapTime = 0;
 function handleUserTouch(x, y) {
@@ -274,8 +298,9 @@ function handleUserTouch(x, y) {
   if (now - lastTapTime < 180) return;
   lastTapTime = now;
 
-  for (let i = 0; i < 5; i++) {
-    setTimeout(() => spawnHeart(), i * 70);
+  // Thả 2-3 trái tim nhẹ nhàng
+  for (let i = 0; i < 3; i++) {
+    setTimeout(() => spawnHeart(), i * 110);
   }
 
   if (typeof x === 'number' && typeof y === 'number' && x > 0 && y > 0) {
@@ -290,33 +315,29 @@ document.addEventListener('pointerdown', (e) => {
 });
 
 // ============================================
-// INIT
+// KHỞI ĐỘNG CÁC VÒNG LẶP (Chu kỳ êm dịu, không giật lag)
 // ============================================
 function init() {
+  setupCenterHeart();
   animateFireworks();
 
-  // Hearts
-  setInterval(spawnHeart, 350);
+  // Nhịp độ rơi trái tim êm đềm: 650ms/trái tim (rất mượt mà)
+  setInterval(spawnHeart, 650);
 
-  // Falling text - tần suất cao hơn
-  setInterval(spawnFallingMessage, 1200);
+  // Nhịp độ thông điệp rơi chậm rãi: 2.8 giây/thông điệp (dễ đọc, thư thái)
+  setInterval(spawnFallingMessage, 2800);
 
-  // Center message cycle
-  setInterval(cycleMessage, 5000);
-
-  // Auto fireworks - nổ ngẫu nhiên liên tục
+  // Pháo hoa tự động phát sáng êm dịu mỗi 4.2 giây
   setInterval(() => {
-    for (let i = 0; i < Math.floor(Math.random() * 2) + 1; i++) {
-      setTimeout(() => launchFirework(), i * 300);
-    }
-  }, 3500);
+    launchFirework();
+  }, 4200);
 
-  // Initial burst
+  // Hiệu ứng ban đầu khi vừa tải trang
   setTimeout(() => {
-    for (let i = 0; i < 8; i++) setTimeout(() => spawnHeart(), i * 100);
-    for (let i = 0; i < 3; i++) setTimeout(() => launchFirework(), i * 400);
-    for (let i = 0; i < 4; i++) setTimeout(() => spawnFallingMessage(), i * 300);
-  }, 300);
+    for (let i = 0; i < 5; i++) setTimeout(() => spawnHeart(), i * 160);
+    setTimeout(() => launchFirework(), 300);
+    setTimeout(() => spawnFallingMessage(), 500);
+  }, 200);
 }
 
 if (document.readyState === 'loading') {
